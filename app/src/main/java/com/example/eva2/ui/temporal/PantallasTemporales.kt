@@ -1,277 +1,423 @@
+
 package com.example.eva2.ui.temporal
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eva2.ui.nav.NavColores
 
-/*
- * ============================================================================
- * PANTALLAS TEMPORALES (solo para probar la navegación)
- * Ubicación: ui/temporal/PantallasTemporales.kt
- * ----------------------------------------------------------------------------
- * Son pantallas de mentira. Cuando tu compañero tenga las reales:
- *   1) deben recibir los MISMOS parámetros que las de abajo,
- *   2) si las pone en ui/ (mismo paquete que Navegacion.kt) Kotlin usa las
- *      suyas automáticamente; si las pone en otro paquete, cambia el import
- *      "com.example.eva2.ui.temporal.*" en ui/Navegacion.kt,
- *   3) cuando no quede ninguna, se borra la carpeta "temporal".
- * ============================================================================
- */
+// Datos ficticios para mostrar contenido en la aplicación.
+private val lineas = listOf(
+    "Construcción en madera",
+    "Bioproductos y biomateriales",
+    "Recursos forestales"
+)
 
-// ---------- Piezas reutilizables ----------
+private val investigadores = listOf(
+    "Camila Rojas",
+    "Mateo Fuentes",
+    "Sofía Vidal"
+)
 
+private val proyectos = listOf(
+    "Sistema modular de madera",
+    "Paneles de biomateriales",
+    "Trazabilidad forestal"
+)
+
+private val publicaciones = listOf(
+    "Diseño sostenible en madera",
+    "Innovación en biomateriales",
+    "Gestión responsable del bosque"
+)
+
+// Título reutilizable para mantener el mismo estilo.
 @Composable
-private fun BotonBurdeo(texto: String, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = NavColores.Burdeo,
-            contentColor = NavColores.Blanco
-        )
-    ) { Text(texto) }
-}
-
-@Composable
-private fun PantallaTemporal(
-    titulo: String,
-    descripcion: String,
-    acciones: List<Pair<String, () -> Unit>> = emptyList()
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            text = titulo,
-            color = NavColores.Burdeo,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Bold,
-            fontSize = 26.sp
-        )
-        Text(descripcion)
-        acciones.forEach { (texto, onClick) -> BotonBurdeo(texto, onClick) }
+private fun Titulo(texto: String, descripcion: String = "") {
+    Text(
+        texto,
+        fontSize = 27.sp,
+        fontWeight = FontWeight.Bold,
+        color = NavColores.Burdeo
+    )
+    if (descripcion.isNotEmpty()) {
+        Text(descripcion, color = NavColores.TextoGris)
     }
 }
 
-// ===========================================================================
-// ACCESO
-// ===========================================================================
-
-/** Recibe: onIngresar, onIrARegistro. */
+// Tarjeta blanca con bordes redondeados.
 @Composable
-fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) = PantallaTemporal(
-    titulo = "Iniciar sesión",
-    descripcion = "Pantalla temporal: aquí irá el formulario validado del login.",
-    acciones = listOf("Ingresar" to onIngresar, "Crear cuenta" to onIrARegistro)
-)
-
-/** Recibe: onRegistrar, onVolver. */
-@Composable
-fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) = PantallaTemporal(
-    titulo = "Crear cuenta",
-    descripcion = "Pantalla temporal: aquí irá el formulario de registro con validaciones.",
-    acciones = listOf("Registrarme" to onRegistrar, "Volver al login" to onVolver)
-)
-
-// ===========================================================================
-// SECCIONES (pestañas de arriba)
-// ===========================================================================
-
-/** Portada. Recibe: onExplorar, onVerIndicadores. (Imita el hero del mockup.) */
-@Composable
-fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
-    Column(
+private fun Tarjeta(
+    titulo: String,
+    descripcion: String,
+    accion: (() -> Unit)? = null
+) {
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(NavColores.Burdeo, NavColores.BurdeoOscuro)))
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp)
+            .fillMaxWidth()
+            .then(
+                if (accion != null) Modifier.clickable { accion() }
+                else Modifier
+            ),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = NavColores.Blanco
+        ),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "CONOCIMIENTO QUE CONSTRUYE",
-            color = NavColores.RosaClaro,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 2.sp
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = buildAnnotatedString {
-                append("El futuro de la madera, ")
-                withStyle(SpanStyle(fontStyle = FontStyle.Italic, color = NavColores.RosaClaro)) {
-                    append("en tus manos.")
-                }
-            },
-            color = NavColores.Blanco,
-            fontFamily = FontFamily.Serif,
-            fontSize = 38.sp,
-            lineHeight = 44.sp
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Investigación, innovación y conocimiento para transformar la industria de la madera en Chile.",
-            color = NavColores.Blanco
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = onExplorar,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = NavColores.Blanco,
-                contentColor = NavColores.Burdeo
+        Column(Modifier.padding(16.dp)) {
+            Text(
+                titulo,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = NavColores.Burdeo
             )
-        ) { Text("Explorar biblioteca  →") }
-        TextButton(onClick = onVerIndicadores) {
-            Text("Ver indicadores", color = NavColores.Blanco)
+            Spacer(Modifier.height(6.dp))
+            Text(descripcion, color = NavColores.TextoGris)
+            if (accion != null) {
+                Spacer(Modifier.height(8.dp))
+                Text("Ver detalle →", color = NavColores.Burdeo)
+            }
         }
     }
 }
 
-/** Investigación. Recibe: onVerLinea(id). */
+// Fondo y distribución compartidos por las pantallas.
 @Composable
-fun InvestigacionScreen(onVerLinea: (Int) -> Unit) = PantallaTemporal(
-    titulo = "Investigación",
-    descripcion = "Pantalla temporal: aquí irá la lista de líneas y sublíneas de investigación.",
-    acciones = listOf(
-        "Línea 1" to { onVerLinea(1) },
-        "Línea 2" to { onVerLinea(2) },
-        "Línea 3" to { onVerLinea(3) }
-    )
-)
+private fun Pagina(
+    titulo: String,
+    descripcion: String = "",
+    contenido: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(NavColores.Crema)
+            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Titulo(titulo, descripcion)
+        contenido()
+    }
+}
 
-/** CENAMAD. No recibe parámetros. */
+// Botón principal reutilizable.
 @Composable
-fun CenamadScreen() = PantallaTemporal(
-    titulo = "CENAMAD",
-    descripcion = "Pantalla temporal: aquí irá la información del centro."
-)
+private fun Boton(texto: String, accion: () -> Unit) {
+    Button(
+        onClick = accion,
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = NavColores.Burdeo
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Text(texto)
+    }
+}
 
-/** Novedades. No recibe parámetros. */
+// INICIO DE SESIÓN
 @Composable
-fun NovedadesScreen() = PantallaTemporal(
-    titulo = "Novedades",
-    descripcion = "Pantalla temporal: aquí irán las noticias y eventos."
-)
+fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
+    var correo by remember { mutableStateOf("") }
+    var clave by remember { mutableStateOf("") }
 
-// ===========================================================================
-// OTRAS PANTALLAS DE LA BARRA INFERIOR
-// ===========================================================================
+    Pagina("Bienvenido a CENAMAD", "Conocimiento e innovación en madera.") {
+        OutlinedTextField(
+            correo, { correo = it },
+            label = { Text("Correo electrónico") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            clave, { clave = it },
+            label = { Text("Contraseña") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Boton("Ingresar", onIngresar)
+        TextButton(onClick = onIrARegistro) {
+            Text("Crear cuenta")
+        }
+    }
+}
 
-/** Explorar. Recibe: onVerPublicacion(id), onVerInvestigador(id), onVerProyecto(id). */
+// REGISTRO
+@Composable
+fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
+    var nombre by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
+    var clave by remember { mutableStateOf("") }
+
+    Pagina("Crear cuenta", "Completa tus datos.") {
+        OutlinedTextField(
+            nombre, { nombre = it },
+            label = { Text("Nombre") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            correo, { correo = it },
+            label = { Text("Correo") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            clave, { clave = it },
+            label = { Text("Contraseña") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Boton("Registrarme", onRegistrar)
+        TextButton(onClick = onVolver) { Text("Volver") }
+    }
+}
+
+// PANTALLA PRINCIPAL
+@Composable
+fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(NavColores.BurdeoOscuro)
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        Spacer(Modifier.height(20.dp))
+        Text("CENAMAD", color = NavColores.Blanco, fontSize = 14.sp)
+        Text(
+            "Innovación que transforma la madera.",
+            color = NavColores.Blanco,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            "Investigación, tecnología y sostenibilidad para el futuro.",
+            color = NavColores.Blanco
+        )
+        Button(
+            onClick = onExplorar,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = NavColores.Blanco,
+                contentColor = NavColores.Burdeo
+            )
+        ) { Text("Explorar contenido") }
+        OutlinedButton(
+            onClick = onVerIndicadores,
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Ver indicadores") }
+    }
+}
+
+// LÍNEAS DE INVESTIGACIÓN
+@Composable
+fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
+    Pagina("Investigación", "Conoce nuestras áreas de trabajo.") {
+        lineas.forEachIndexed { i, nombre ->
+            Tarjeta(
+                nombre,
+                "Investigación aplicada y desarrollo sostenible.",
+                { onVerLinea(i + 1) }
+            )
+        }
+    }
+}
+
+// INFORMACIÓN DE CENAMAD
+@Composable
+fun CenamadScreen() {
+    Pagina("Sobre CENAMAD", "Ciencia para una industria más sostenible.") {
+        Tarjeta("Nuestra misión", "Impulsar la investigación y la innovación.")
+        Tarjeta("Nuestro trabajo", "Desarrollo tecnológico y formación de capital humano.")
+        Tarjeta("Colaboración", "Conectar investigadores, proyectos y publicaciones.")
+    }
+}
+
+// NOVEDADES
+@Composable
+fun NovedadesScreen() {
+    Pagina("Novedades", "Noticias y actividades de ejemplo.") {
+        Tarjeta("Seminario de madera", "Actividad sobre construcción sostenible.")
+        Tarjeta("Nueva publicación", "Material técnico de investigación.")
+        Tarjeta("Encuentro científico", "Colaboración entre investigadores.")
+    }
+}
+
+// BUSCADOR Y FILTROS
 @Composable
 fun ExplorarScreen(
     onVerPublicacion: (Int) -> Unit,
     onVerInvestigador: (Int) -> Unit,
     onVerProyecto: (Int) -> Unit
-) = PantallaTemporal(
-    titulo = "Explorar",
-    descripcion = "Pantalla temporal: aquí irán el buscador, los filtros y la lista de publicaciones.",
-    acciones = listOf(
-        "Publicación 1 (abre Vista previa)" to { onVerPublicacion(1) },
-        "Publicación 2" to { onVerPublicacion(2) },
-        "Investigador 1" to { onVerInvestigador(1) },
-        "Proyecto 1" to { onVerProyecto(1) }
-    )
-)
+) {
+    var busqueda by remember { mutableStateOf("") }
+    var filtro by remember { mutableStateOf("Todo") }
+    val filtros = listOf("Todo", "Publicaciones", "Investigadores", "Proyectos")
 
-/** Guardados. Recibe: onVerPublicacion(id). */
+    Pagina("Explorar", "Encuentra contenido de investigación.") {
+        OutlinedTextField(
+            busqueda, { busqueda = it },
+            label = { Text("Buscar contenido") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        // Los chips permiten seleccionar el tipo de resultado.
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            filtros.take(2).forEach {
+                FilterChip(
+                    selected = filtro == it,
+                    onClick = { filtro = it },
+                    label = { Text(it) }
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            filtros.drop(2).forEach {
+                FilterChip(
+                    selected = filtro == it,
+                    onClick = { filtro = it },
+                    label = { Text(it) }
+                )
+            }
+        }
+
+        // Buscamos coincidencias en los nombres.
+        if (filtro == "Todo" || filtro == "Publicaciones") {
+            publicaciones.forEachIndexed { i, nombre ->
+                if (nombre.contains(busqueda, ignoreCase = true)) {
+                    Tarjeta(nombre, "Publicación de ejemplo", {
+                        onVerPublicacion(i + 1)
+                    })
+                }
+            }
+        }
+
+        if (filtro == "Todo" || filtro == "Investigadores") {
+            investigadores.forEachIndexed { i, nombre ->
+                if (nombre.contains(busqueda, ignoreCase = true)) {
+                    Tarjeta(nombre, "Investigador de ejemplo", {
+                        onVerInvestigador(i + 1)
+                    })
+                }
+            }
+        }
+
+        if (filtro == "Todo" || filtro == "Proyectos") {
+            proyectos.forEachIndexed { i, nombre ->
+                if (nombre.contains(busqueda, ignoreCase = true)) {
+                    Tarjeta(nombre, "Proyecto de ejemplo", {
+                        onVerProyecto(i + 1)
+                    })
+                }
+            }
+        }
+    }
+}
+
+// GUARDADOS
 @Composable
-fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) = PantallaTemporal(
-    titulo = "Guardados",
-    descripcion = "Pantalla temporal: aquí irán las publicaciones guardadas.",
-    acciones = listOf("Publicación 1" to { onVerPublicacion(1) })
-)
+fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) {
+    Pagina("Guardados", "Acceso rápido a contenido.") {
+        Tarjeta("Diseño sostenible en madera", "Publicación de ejemplo.", {
+            onVerPublicacion(1)
+        })
+    }
+}
 
-/** Perfil. Recibe: onCerrarSesion. */
+// PERFIL
 @Composable
-fun PerfilScreen(onCerrarSesion: () -> Unit) = PantallaTemporal(
-    titulo = "Mi perfil",
-    descripcion = "Pantalla temporal: aquí irán los datos del usuario.",
-    acciones = listOf("Cerrar sesión" to onCerrarSesion)
-)
+fun PerfilScreen(onCerrarSesion: () -> Unit) {
+    Pagina("Mi perfil", "Tu espacio personal.") {
+        Tarjeta("Usuario de prueba", "estudiante@ejemplo.cl")
+        Boton("Cerrar sesión", onCerrarSesion)
+    }
+}
 
-// ===========================================================================
-// DETALLES (reciben el id del elemento elegido)
-// ===========================================================================
-
-/** Recibe: lineaId, onVerInvestigador(id), onVerProyecto(id), onVerPublicacion(id). */
+// DETALLE DE UNA LÍNEA
 @Composable
 fun LineaDetalleScreen(
     lineaId: Int,
     onVerInvestigador: (Int) -> Unit,
     onVerProyecto: (Int) -> Unit,
     onVerPublicacion: (Int) -> Unit
-) = PantallaTemporal(
-    titulo = "Línea $lineaId",
-    descripcion = "Pantalla temporal: aquí irán los contenidos relacionados de la línea.",
-    acciones = listOf(
-        "Investigador 1" to { onVerInvestigador(1) },
-        "Proyecto 1" to { onVerProyecto(1) },
-        "Publicación 1" to { onVerPublicacion(1) }
-    )
-)
+) {
+    val i = (lineaId - 1).coerceIn(0, lineas.lastIndex)
 
-/** Recibe: investigadorId, onVerProyecto(id), onVerPublicacion(id). */
+    Pagina(lineas[i], "Detalle de la línea de investigación.") {
+        Tarjeta(investigadores[i], "Investigador relacionado.", {
+            onVerInvestigador(i + 1)
+        })
+        Tarjeta(proyectos[i], "Proyecto relacionado.", {
+            onVerProyecto(i + 1)
+        })
+        Tarjeta(publicaciones[i], "Publicación relacionada.", {
+            onVerPublicacion(i + 1)
+        })
+    }
+}
+
+// DETALLE DE INVESTIGADOR
 @Composable
 fun InvestigadorScreen(
     investigadorId: Int,
     onVerProyecto: (Int) -> Unit,
     onVerPublicacion: (Int) -> Unit
-) = PantallaTemporal(
-    titulo = "Investigador $investigadorId",
-    descripcion = "Pantalla temporal: aquí irá el perfil con sus proyectos y publicaciones.",
-    acciones = listOf(
-        "Proyecto 1" to { onVerProyecto(1) },
-        "Publicación 1" to { onVerPublicacion(1) }
-    )
-)
+) {
+    val i = (investigadorId - 1).coerceIn(0, investigadores.lastIndex)
 
-/** Recibe: proyectoId, onVerInvestigador(id). */
-@Composable
-fun ProyectoScreen(proyectoId: Int, onVerInvestigador: (Int) -> Unit) = PantallaTemporal(
-    titulo = "Proyecto $proyectoId",
-    descripcion = "Pantalla temporal: aquí irá el detalle del proyecto.",
-    acciones = listOf("Ver investigador responsable" to { onVerInvestigador(1) })
-)
+    Pagina(investigadores[i], "Investigador de ejemplo.") {
+        Tarjeta(proyectos[i], "Proyecto relacionado.", {
+            onVerProyecto(i + 1)
+        })
+        Tarjeta(publicaciones[i], "Publicación relacionada.", {
+            onVerPublicacion(i + 1)
+        })
+    }
+}
 
-/** Recibe: publicacionId, onVerInvestigador(id). */
+// DETALLE DE PROYECTO
 @Composable
-fun PublicacionScreen(publicacionId: Int, onVerInvestigador: (Int) -> Unit) = PantallaTemporal(
-    titulo = "Publicación $publicacionId",
-    descripcion = "Pantalla temporal: aquí irá el detalle de la publicación.",
-    acciones = listOf("Ver investigador autor" to { onVerInvestigador(1) })
-)
+fun ProyectoScreen(proyectoId: Int, onVerInvestigador: (Int) -> Unit) {
+    val i = (proyectoId - 1).coerceIn(0, proyectos.lastIndex)
 
-/** No recibe parámetros. */
+    Pagina(proyectos[i], "Proyecto de demostración.") {
+        Tarjeta("Estado", "En desarrollo")
+        Tarjeta(investigadores[i], "Investigador relacionado.", {
+            onVerInvestigador(i + 1)
+        })
+    }
+}
+
+// DETALLE DE PUBLICACIÓN
 @Composable
-fun IndicadoresScreen() = PantallaTemporal(
-    titulo = "Indicadores",
-    descripcion = "Pantalla temporal: aquí irán los indicadores con gráficos simples."
-)
+fun PublicacionScreen(
+    publicacionId: Int,
+    onVerInvestigador: (Int) -> Unit
+) {
+    val i = (publicacionId - 1).coerceIn(0, publicaciones.lastIndex)
+
+    Pagina(publicaciones[i], "Publicación de demostración.") {
+        Tarjeta("Tipo", "Contenido científico")
+        Tarjeta(investigadores[i], "Autor relacionado.", {
+            onVerInvestigador(i + 1)
+        })
+    }
+}
+
+// INDICADORES
+@Composable
+fun IndicadoresScreen() {
+    Pagina("Indicadores", "Cifras ficticias para mostrar la interfaz.") {
+        Tarjeta("03 · Líneas", "Áreas de investigación.")
+        Tarjeta("03 · Investigadores", "Personas de ejemplo.")
+        Tarjeta("03 · Proyectos", "Proyectos de ejemplo.")
+        Tarjeta("03 · Publicaciones", "Publicaciones de ejemplo.")
+    }
+}

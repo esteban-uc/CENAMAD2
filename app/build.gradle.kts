@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.example.eva2"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -55,10 +55,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("com.google.maps.android:maps-compose:9.0.1")
-    implementation("com.google.android.gms:play-services-maps:20.1.0")
-    implementation("com.google.android.gms:play-services-location:21.4.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v2110)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

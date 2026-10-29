@@ -19,7 +19,7 @@
         <!-- Clave API para Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyCs6OhIZE6a1f2pgDPL8ODUC8rQwGrYfQY" />
 
         <activity
             android:name=".MainActivity"

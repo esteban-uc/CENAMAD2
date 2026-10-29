@@ -10,23 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-/*
- * ============================================================================
- * NAVEGACIÓN · BarraInferior.kt
- * Ubicación: ui/nav/BarraInferior.kt
- * ----------------------------------------------------------------------------
- *  - ItemsInferiores ... las 4 pestañas de abajo: Inicio, Explorar, Guardados, Perfil
- *  - RutasPrincipales .. todas las rutas que muestran la barra inferior
- *  - BarraInferior ..... el dibujo de la barra
- *
- *  Agregar/quitar pestaña ... lista ItemsInferiores
- *  Cambiar ícono ............ Iconos.kt
- *  Cambiar colores .......... NavColores.kt
- *
- * "Inicio" aparece marcada en cualquiera de las 4 secciones de arriba
- * (Portada, Investigación, CENAMAD, Novedades): eso lo define rutasQueLaActivan.
- * ============================================================================
- */
 data class ItemInferior(
     val ruta: String,
     val titulo: String,

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eva2.ui.nav.NavColores
 
-// Datos ficticios para mostrar contenido en la aplicación.
+
 private val lineas = listOf(
     "Construcción en madera",
     "Bioproductos y biomateriales",
@@ -40,7 +40,7 @@ private val publicaciones = listOf(
     "Gestión responsable del bosque"
 )
 
-// Título reutilizable para mantener el mismo estilo.
+
 @Composable
 private fun Titulo(texto: String, descripcion: String = "") {
     Text(
@@ -54,7 +54,7 @@ private fun Titulo(texto: String, descripcion: String = "") {
     }
 }
 
-// Tarjeta blanca con bordes redondeados.
+
 @Composable
 private fun Tarjeta(
     titulo: String,
@@ -91,7 +91,7 @@ private fun Tarjeta(
     }
 }
 
-// Fondo y distribución compartidos por las pantallas.
+
 @Composable
 private fun Pagina(
     titulo: String,
@@ -111,7 +111,7 @@ private fun Pagina(
     }
 }
 
-// Botón principal reutilizable.
+
 @Composable
 private fun Boton(texto: String, accion: () -> Unit) {
     Button(
@@ -126,7 +126,7 @@ private fun Boton(texto: String, accion: () -> Unit) {
     }
 }
 
-// INICIO DE SESIÓN
+
 @Composable
 fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
     var correo by remember { mutableStateOf("") }
@@ -150,7 +150,7 @@ fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
     }
 }
 
-// REGISTRO
+
 @Composable
 fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
     var nombre by remember { mutableStateOf("") }
@@ -177,8 +177,6 @@ fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
         TextButton(onClick = onVolver) { Text("Volver") }
     }
 }
-
-// PANTALLA PRINCIPAL
 @Composable
 fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
     Column(
@@ -214,8 +212,6 @@ fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
         ) { Text("Ver indicadores") }
     }
 }
-
-// LÍNEAS DE INVESTIGACIÓN
 @Composable
 fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     Pagina("Investigación", "Conoce nuestras áreas de trabajo.") {
@@ -228,8 +224,6 @@ fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
         }
     }
 }
-
-// INFORMACIÓN DE CENAMAD
 @Composable
 fun CenamadScreen() {
     Pagina("Sobre CENAMAD", "Ciencia para una industria más sostenible.") {
@@ -238,8 +232,6 @@ fun CenamadScreen() {
         Tarjeta("Colaboración", "Conectar investigadores, proyectos y publicaciones.")
     }
 }
-
-// NOVEDADES
 @Composable
 fun NovedadesScreen() {
     Pagina("Novedades", "Noticias y actividades de ejemplo.") {
@@ -248,8 +240,6 @@ fun NovedadesScreen() {
         Tarjeta("Encuentro científico", "Colaboración entre investigadores.")
     }
 }
-
-// BUSCADOR Y FILTROS
 @Composable
 fun ExplorarScreen(
     onVerPublicacion: (Int) -> Unit,
@@ -268,7 +258,7 @@ fun ExplorarScreen(
             singleLine = true
         )
 
-        // Los chips permiten seleccionar el tipo de resultado.
+
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             filtros.take(2).forEach {
                 FilterChip(
@@ -287,8 +277,6 @@ fun ExplorarScreen(
                 )
             }
         }
-
-        // Buscamos coincidencias en los nombres.
         if (filtro == "Todo" || filtro == "Publicaciones") {
             publicaciones.forEachIndexed { i, nombre ->
                 if (nombre.contains(busqueda, ignoreCase = true)) {
@@ -320,8 +308,6 @@ fun ExplorarScreen(
         }
     }
 }
-
-// GUARDADOS
 @Composable
 fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) {
     Pagina("Guardados", "Acceso rápido a contenido.") {
@@ -331,7 +317,6 @@ fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) {
     }
 }
 
-// PERFIL
 @Composable
 fun PerfilScreen(onCerrarSesion: () -> Unit) {
     Pagina("Mi perfil", "Tu espacio personal.") {
@@ -339,8 +324,6 @@ fun PerfilScreen(onCerrarSesion: () -> Unit) {
         Boton("Cerrar sesión", onCerrarSesion)
     }
 }
-
-// DETALLE DE UNA LÍNEA
 @Composable
 fun LineaDetalleScreen(
     lineaId: Int,
@@ -362,8 +345,6 @@ fun LineaDetalleScreen(
         })
     }
 }
-
-// DETALLE DE INVESTIGADOR
 @Composable
 fun InvestigadorScreen(
     investigadorId: Int,
@@ -381,8 +362,6 @@ fun InvestigadorScreen(
         })
     }
 }
-
-// DETALLE DE PROYECTO
 @Composable
 fun ProyectoScreen(proyectoId: Int, onVerInvestigador: (Int) -> Unit) {
     val i = (proyectoId - 1).coerceIn(0, proyectos.lastIndex)
@@ -394,8 +373,6 @@ fun ProyectoScreen(proyectoId: Int, onVerInvestigador: (Int) -> Unit) {
         })
     }
 }
-
-// DETALLE DE PUBLICACIÓN
 @Composable
 fun PublicacionScreen(
     publicacionId: Int,
@@ -410,8 +387,6 @@ fun PublicacionScreen(
         })
     }
 }
-
-// INDICADORES
 @Composable
 fun IndicadoresScreen() {
     Pagina("Indicadores", "Cifras ficticias para mostrar la interfaz.") {

@@ -24,26 +24,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-/*
- * ============================================================================
- * NAVEGACIÓN · BarraSuperior.kt
- * Ubicación: ui/nav/BarraSuperior.kt
- * ----------------------------------------------------------------------------
- * Contiene 4 piezas:
- *
- *  1) LogoCenamad ............. círculo burdeo con la "C" + texto CENAMAD.
- *                               (Para usar el logo real: reemplazar el Box por
- *                                Image(painterResource(R.drawable.logo), ...))
- *  2) BarraSuperiorPrincipal .. logo + botón hamburguesa (abre el menú lateral)
- *                               + la fila de secciones cuando corresponde.
- *  3) BarraSuperiorDetalle .... flecha "volver" + título (pantallas de detalle).
- *  4) BarraSuperiorVistaPrevia  "X" para cerrar + título centrado + botón
- *                               compartir (pantalla "Vista previa" de una publicación).
- * ============================================================================
- */
-
-// ---------- 1) LOGO ----------
+// LOGO
 @Composable
 fun LogoCenamad() {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -73,12 +54,7 @@ fun LogoCenamad() {
     }
 }
 
-// ---------- 2) BARRA PRINCIPAL ----------
-/**
- * @param mostrarSecciones true = muestra la fila Portada/Investigación/CENAMAD/Novedades
- * @param onMenu           se toca la hamburguesa
- * @param onSeccion        se toca una sección (recibe su ruta)
- */
+//BARRA PRINCIPAL
 @Composable
 fun BarraSuperiorPrincipal(
     rutaActual: String?,
@@ -110,7 +86,7 @@ fun BarraSuperiorPrincipal(
             }
         }
 
-        // La fila de secciones aparece/desaparece con animación
+
         AnimatedVisibility(visible = mostrarSecciones) {
             FilaSecciones(rutaActual = rutaActual, onSeccion = onSeccion)
         }

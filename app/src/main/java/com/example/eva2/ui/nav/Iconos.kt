@@ -6,17 +6,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.unit.dp
 
-/*
- * ============================================================================
- * NAVEGACIÓN · Iconos.kt
- * Ubicación: ui/nav/Iconos.kt
- * ----------------------------------------------------------------------------
- * Íconos dibujados con trazos vectoriales (SVG). No usan ninguna librería
- * extra, así no hay errores de dependencias de "Icons".
- * Uso:  Icon(imageVector = Iconos.Inicio, contentDescription = "Inicio")
- * Para agregar un ícono: otra línea con su nombre y su trazo SVG (viewport 24x24).
- * ============================================================================
- */
 object Iconos {
     val Inicio: ImageVector by lazy { crear("Inicio", "M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z") }
     val Guardados: ImageVector by lazy { crear("Guardados", "M17,3H7c-1.1,0 -1.99,0.9 -1.99,2L5,21l7,-3 7,3V5c0,-1.1 -0.9,-2 -2,-2z") }

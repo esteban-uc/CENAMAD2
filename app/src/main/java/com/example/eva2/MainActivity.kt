@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Eva2Theme {
-                // NAVEGACIÓN: toda la navegación está en ui/Navegacion.kt
                 Navegacion()
             }
         }

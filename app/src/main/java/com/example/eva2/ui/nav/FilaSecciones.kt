@@ -20,21 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-/*
- * ============================================================================
- * NAVEGACIÓN · FilaSecciones.kt
- * Ubicación: ui/nav/FilaSecciones.kt
- * ----------------------------------------------------------------------------
- * Fila de pestañas de arriba (Portada · Investigación · CENAMAD · Novedades),
- * igual que el mockup. La pestaña activa va en burdeo con una línea abajo
- * (el color cambia con animación).
- *
- *  - Agregar/quitar una sección ........ lista "Secciones" (abajo)
- *  - Cambiar el texto de una pestaña ... campo "titulo"
- *  - Cuándo se muestra esta fila ....... ui/Navegacion.kt (esSeccion)
- * ============================================================================
- */
 data class Seccion(val ruta: String, val titulo: String)
 
 val Secciones = listOf(

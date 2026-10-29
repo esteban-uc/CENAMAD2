@@ -24,7 +24,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-// LOGO
+
+
+
+//LOGO
 @Composable
 fun LogoCenamad() {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -54,7 +57,6 @@ fun LogoCenamad() {
     }
 }
 
-//BARRA PRINCIPAL
 @Composable
 fun BarraSuperiorPrincipal(
     rutaActual: String?,
@@ -85,8 +87,6 @@ fun BarraSuperiorPrincipal(
                 )
             }
         }
-
-
         AnimatedVisibility(visible = mostrarSecciones) {
             FilaSecciones(rutaActual = rutaActual, onSeccion = onSeccion)
         }

@@ -1,4 +1,4 @@
-package com.example.eva2.ui.nav
+package com.example.DuocUc.ui.nav
 
 import androidx.compose.ui.graphics.Color
 

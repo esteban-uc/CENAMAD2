@@ -1,4 +1,4 @@
-package com.example.eva2.ui
+package com.example.DuocUc.ui
 
 import android.content.Context
 import android.content.Intent
@@ -27,15 +27,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.eva2.ui.nav.BarraInferior
-import com.example.eva2.ui.nav.BarraSuperiorDetalle
-import com.example.eva2.ui.nav.BarraSuperiorPrincipal
-import com.example.eva2.ui.nav.BarraSuperiorVistaPrevia
-import com.example.eva2.ui.nav.ContenidoMenuLateral
-import com.example.eva2.ui.nav.Rutas
-import com.example.eva2.ui.nav.RutasPrincipales
-import com.example.eva2.ui.nav.Secciones
-import com.example.eva2.ui.temporal.*
+import com.example.DuocUc.ui.nav.BarraInferior
+import com.example.DuocUc.ui.nav.BarraSuperiorDetalle
+import com.example.DuocUc.ui.nav.BarraSuperiorPrincipal
+import com.example.DuocUc.ui.nav.BarraSuperiorVistaPrevia
+import com.example.DuocUc.ui.nav.ContenidoMenuLateral
+import com.example.DuocUc.ui.nav.Rutas
+import com.example.DuocUc.ui.nav.RutasPrincipales
+import com.example.DuocUc.ui.nav.Secciones
+import com.example.DuocUc.ui.temporal.*
 import kotlinx.coroutines.launch
 
 /*

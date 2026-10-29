@@ -1,4 +1,4 @@
-package com.example.eva2.ui.theme
+package com.example.DuocUc.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

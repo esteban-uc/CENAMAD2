@@ -1,4 +1,4 @@
-package com.example.eva2.ui.temporal
+package com.example.DuocUc.ui.temporal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.eva2.ui.nav.NavColores
+import com.example.DuocUc.ui.nav.NavColores
 
 /*
  * ============================================================================

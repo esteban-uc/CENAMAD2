@@ -38,22 +38,57 @@ import com.example.eva2.ui.nav.Secciones
 import com.example.eva2.ui.temporal.*
 import kotlinx.coroutines.launch
 
+/*
+ * ============================================================================
+ * NAVEGACIÓN · Navegacion.kt   (ARCHIVO PRINCIPAL)
+ * Ubicación: ui/Navegacion.kt
+ * ----------------------------------------------------------------------------
+ * MainActivity solo llama a:  Navegacion()
+ *
+ * MAPA DE ARCHIVOS DE LA NAVEGACIÓN
+ *   ui/Navegacion.kt ............. (este) arma todo + mapa de pantallas
+ *   ui/nav/Rutas.kt .............. nombres de las pantallas
+ *   ui/nav/NavColores.kt ......... colores (burdeo y crema)
+ *   ui/nav/Iconos.kt ............. íconos dibujados a mano (sin librerías)
+ *   ui/nav/BarraSuperior.kt ...... logo + hamburguesa / flecha volver / vista previa
+ *   ui/nav/FilaSecciones.kt ...... pestañas Portada·Investigación·CENAMAD·Novedades
+ *   ui/nav/BarraInferior.kt ...... Inicio · Explorar · Guardados · Perfil
+ *   ui/nav/MenuLateral.kt ........ menú que abre la hamburguesa
+ *   ui/temporal/ ................. pantallas de prueba (se reemplazan)
+ *
+ * ESTE ARCHIVO TIENE, EN ORDEN:
+ *   A) Navegacion() ........ esqueleto: menú lateral + barras + contenido
+ *   B) GrafoNavegacion() ... qué pantalla va con qué ruta y qué hace cada botón
+ *   C) Funciones de ayuda .. cambiar de sección, cerrar sesión, títulos
+ * ============================================================================
+ */
+
+// ============================================================================
+// A) ESQUELETO DE LA APP
+// ============================================================================
 @Composable
 fun Navegacion() {
+    // El "control remoto" de la navegación: se crea una vez y se comparte.
     val navController = rememberNavController()
+
+    // Estado del menú lateral (abierto/cerrado) y un scope para abrirlo/cerrarlo.
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val contexto = LocalContext.current
+    val contexto = LocalContext.current   // se usa para abrir el menú "Compartir" del celular
+
+    // Pantalla actual (se actualiza sola cada vez que se navega).
     val entradaActual by navController.currentBackStackEntryAsState()
     val ruta = entradaActual?.destination?.route
+
+    // ¿Qué barras mostrar según la pantalla?
     val esAutenticacion = ruta == Rutas.LOGIN || ruta == Rutas.REGISTRO
-    val esSeccion = Secciones.any { it.ruta == ruta }
-    val esPrincipal = ruta in RutasPrincipales
+    val esSeccion = Secciones.any { it.ruta == ruta }   // Portada, Investigación, CENAMAD, Novedades
+    val esPrincipal = ruta in RutasPrincipales          // las 4 de abajo + secciones
 
-
+    // ---- MENÚ LATERAL (ver ui/nav/MenuLateral.kt) ----
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = esPrincipal,
+        gesturesEnabled = esPrincipal,   // solo se abre deslizando en pantallas principales
         drawerContent = {
             ContenidoMenuLateral(
                 rutaActual = ruta,
@@ -73,16 +108,17 @@ fun Navegacion() {
         }
     ) {
         Scaffold(
+            // ---- BARRA SUPERIOR (ver ui/nav/BarraSuperior.kt) ----
             topBar = {
                 when {
-                    esAutenticacion -> Unit
+                    esAutenticacion -> Unit   // login y registro: sin barra
                     esPrincipal -> BarraSuperiorPrincipal(
                         rutaActual = ruta,
                         mostrarSecciones = esSeccion,
                         onMenu = { scope.launch { drawerState.open() } },
                         onSeccion = { navController.irASeccion(it) }
                     )
-
+                    // "Vista previa" de una publicación: barra con X y compartir
                     ruta == Rutas.PUBLICACION_DETALLE -> BarraSuperiorVistaPrevia(
                         titulo = "Vista previa",
                         onCerrar = { navController.popBackStack() },
@@ -97,7 +133,7 @@ fun Navegacion() {
                     )
                 }
             },
-
+            // ---- BARRA INFERIOR (ver ui/nav/BarraInferior.kt) ----
             bottomBar = {
                 AnimatedVisibility(
                     visible = esPrincipal,
@@ -111,6 +147,7 @@ fun Navegacion() {
                 }
             }
         ) { padding ->
+            // ---- CONTENIDO ----
             GrafoNavegacion(
                 navController = navController,
                 modifier = Modifier.padding(padding)
@@ -119,12 +156,16 @@ fun Navegacion() {
     }
 }
 
+// ============================================================================
+// B) MAPA DE PANTALLAS
+// ============================================================================
+
 private const val DURACION_MS = 300
 
-
+// Argumento "id" que llevan las pantallas de detalle (tipo Int)
 private val argumentoId = listOf(navArgument(Rutas.ARG_ID) { type = NavType.IntType })
 
-
+// Lee el id de una pantalla de detalle
 private fun NavBackStackEntry.id(): Int = arguments?.getInt(Rutas.ARG_ID) ?: 0
 
 @Composable
@@ -134,9 +175,12 @@ private fun GrafoNavegacion(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Rutas.LOGIN,
+        startDestination = Rutas.LOGIN,   // <- pantalla con la que arranca la app
         modifier = modifier,
 
+        // ---- ANIMACIONES ENTRE PANTALLAS ----
+        // Entre pestañas/secciones: solo desvanecer.
+        // Hacia un detalle: deslizar + desvanecer.
         enterTransition = {
             if (esCambioEntrePrincipales()) fadeIn(tween(250))
             else slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(DURACION_MS)) +
@@ -159,8 +203,12 @@ private fun GrafoNavegacion(
         }
     ) {
 
+        // ---------------------------------------------------------------
+        // 1) ACCESO
+        // ---------------------------------------------------------------
 
-
+        // LOGIN: al ingresar entra a INICIO y borra el login del historial
+        // (así el botón "atrás" no vuelve al login).
         composable(Rutas.LOGIN) {
             LoginScreen(
                 onIngresar = {
@@ -172,6 +220,7 @@ private fun GrafoNavegacion(
             )
         }
 
+        // REGISTRO: al registrarse entra directo a INICIO.
         composable(Rutas.REGISTRO) {
             RegistroScreen(
                 onRegistrar = {
@@ -183,8 +232,11 @@ private fun GrafoNavegacion(
             )
         }
 
+        // ---------------------------------------------------------------
+        // 2) SECCIONES (pestañas de arriba)
+        // ---------------------------------------------------------------
 
-
+        // INICIO ("Portada"): botón "Explorar biblioteca" del mockup -> pestaña Explorar.
         composable(Rutas.INICIO) {
             InicioScreen(
                 onExplorar = { navController.irASeccion(Rutas.EXPLORAR) },
@@ -201,8 +253,14 @@ private fun GrafoNavegacion(
         composable(Rutas.CENAMAD) { UbicacionScreen() }
         composable(Rutas.NOVEDADES) { NovedadesScreen() }
 
+        composable(Rutas.NOVEDADES) { NovedadesScreen() }
 
+        // ---------------------------------------------------------------
+        // 3) OTRAS PANTALLAS DE LA BARRA INFERIOR
+        // ---------------------------------------------------------------
 
+        // EXPLORAR: buscador + filtros + lista de publicaciones (mockup).
+        // Tocar una publicación abre la "Vista previa".
         composable(Rutas.EXPLORAR) {
             ExplorarScreen(
                 onVerPublicacion = { id -> navController.navigate(Rutas.publicacion(id)) },
@@ -210,16 +268,25 @@ private fun GrafoNavegacion(
                 onVerProyecto = { id -> navController.navigate(Rutas.proyecto(id)) }
             )
         }
+
+        // GUARDADOS: publicaciones marcadas con el marcador.
         composable(Rutas.GUARDADOS) {
             GuardadosScreen(
                 onVerPublicacion = { id -> navController.navigate(Rutas.publicacion(id)) }
             )
         }
+
         composable(Rutas.PERFIL) {
             PerfilScreen(
                 onCerrarSesion = { navController.cerrarSesion() }
             )
         }
+
+        // ---------------------------------------------------------------
+        // 4) DETALLES (reciben un id; se lee con entrada.id())
+        // ---------------------------------------------------------------
+
+        // Línea de investigación -> sus investigadores, proyectos y publicaciones.
         composable(Rutas.LINEA_DETALLE, arguments = argumentoId) { entrada ->
             LineaDetalleScreen(
                 lineaId = entrada.id(),
@@ -228,6 +295,8 @@ private fun GrafoNavegacion(
                 onVerPublicacion = { id -> navController.navigate(Rutas.publicacion(id)) }
             )
         }
+
+        // Investigador -> sus proyectos y publicaciones.
         composable(Rutas.INVESTIGADOR_DETALLE, arguments = argumentoId) { entrada ->
             InvestigadorScreen(
                 investigadorId = entrada.id(),
@@ -236,12 +305,16 @@ private fun GrafoNavegacion(
             )
         }
 
+        // Proyecto -> investigador responsable.
         composable(Rutas.PROYECTO_DETALLE, arguments = argumentoId) { entrada ->
             ProyectoScreen(
                 proyectoId = entrada.id(),
                 onVerInvestigador = { id -> navController.navigate(Rutas.investigador(id)) }
             )
         }
+
+        // Publicación = "Vista previa" a pantalla completa.
+        // Sube desde abajo (como un modal) y se cierra con la "X" o bajándola.
         composable(
             route = Rutas.PUBLICACION_DETALLE,
             arguments = argumentoId,
@@ -257,15 +330,21 @@ private fun GrafoNavegacion(
                 onVerInvestigador = { id -> navController.navigate(Rutas.investigador(id)) }
             )
         }
+
+        // Indicadores (se abre desde el menú lateral o desde Inicio).
         composable(Rutas.INDICADORES) { IndicadoresScreen() }
     }
 }
 
+// ============================================================================
+// C) FUNCIONES DE AYUDA
+// ============================================================================
 
-//AYUDA
-
-
-
+/**
+ * Cambia de sección/pestaña sin apilar pantallas repetidas:
+ *  - popUpTo(INICIO) + saveState/restoreState: cada sección recuerda su estado
+ *  - launchSingleTop: tocar la sección actual no la abre dos veces
+ */
 private fun NavHostController.irASeccion(ruta: String) {
     navigate(ruta) {
         popUpTo(Rutas.INICIO) { saveState = true }
@@ -274,29 +353,29 @@ private fun NavHostController.irASeccion(ruta: String) {
     }
 }
 
-
+/** Cierra sesión: borra todo el historial y vuelve al login. */
 private fun NavHostController.cerrarSesion() {
     navigate(Rutas.LOGIN) {
         popUpTo(Rutas.INICIO) { inclusive = true }
     }
 }
 
-
+/** true si la transición es entre dos pantallas principales (para usar solo fade). */
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.esCambioEntrePrincipales(): Boolean {
     val desde = initialState.destination.route
     val hacia = targetState.destination.route
     return desde in RutasPrincipales && hacia in RutasPrincipales
 }
 
-
+/** true si se está abriendo la "Vista previa" (que entra desde abajo). */
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.haciaVistaPrevia(): Boolean =
     targetState.destination.route == Rutas.PUBLICACION_DETALLE
 
-
+/** true si se está cerrando la "Vista previa". */
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.desdeVistaPrevia(): Boolean =
     initialState.destination.route == Rutas.PUBLICACION_DETALLE
 
-
+/** Botón compartir de la vista previa: abre el menú "Compartir" del celular. */
 private fun compartirPublicacion(contexto: Context, id: Int) {
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
@@ -305,6 +384,7 @@ private fun compartirPublicacion(contexto: Context, id: Int) {
     contexto.startActivity(Intent.createChooser(intent, "Compartir publicación"))
 }
 
+/** Título que se muestra en la barra de las pantallas de detalle. */
 private fun tituloDeRuta(ruta: String?): String = when (ruta) {
     Rutas.LINEA_DETALLE -> "Línea de investigación"
     Rutas.INVESTIGADOR_DETALLE -> "Investigador"

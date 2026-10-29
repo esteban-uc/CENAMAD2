@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 data class Seccion(val ruta: String, val titulo: String)
 
 val Secciones = listOf(
@@ -38,7 +39,6 @@ fun FilaSecciones(
         Secciones.forEach { seccion ->
             val activa = rutaActual == seccion.ruta
 
-            // Colores animados al cambiar de sección
             val colorTexto by animateColorAsState(
                 targetValue = if (activa) NavColores.Burdeo else NavColores.TextoGris,
                 label = "colorTextoSeccion"

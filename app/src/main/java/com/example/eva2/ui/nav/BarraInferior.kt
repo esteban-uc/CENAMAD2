@@ -29,7 +29,6 @@ val ItemsInferiores = listOf(
     ItemInferior(Rutas.PERFIL, "Perfil", Iconos.Perfil)
 )
 
-/** Rutas "principales": son las que muestran el menú hamburguesa y la barra inferior. */
 val RutasPrincipales = ItemsInferiores.flatMap { it.rutasQueLaActivan }.distinct()
 
 @Composable

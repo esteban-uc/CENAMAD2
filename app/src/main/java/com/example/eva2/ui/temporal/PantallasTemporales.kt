@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eva2.ui.nav.NavColores
 
-// Datos ficticios para mostrar contenido en la aplicación.
 private val lineas = listOf(
     "Construcción en madera",
     "Bioproductos y biomateriales",
@@ -40,7 +39,7 @@ private val publicaciones = listOf(
     "Gestión responsable del bosque"
 )
 
-// Título reutilizable para mantener el mismo estilo.
+// Título
 @Composable
 private fun Titulo(texto: String, descripcion: String = "") {
     Text(
@@ -54,7 +53,7 @@ private fun Titulo(texto: String, descripcion: String = "") {
     }
 }
 
-// Tarjeta blanca con bordes redondeados.
+
 @Composable
 private fun Tarjeta(
     titulo: String,
@@ -91,7 +90,7 @@ private fun Tarjeta(
     }
 }
 
-// Fondo y distribución compartidos por las pantallas.
+
 @Composable
 private fun Pagina(
     titulo: String,
@@ -111,7 +110,7 @@ private fun Pagina(
     }
 }
 
-// Botón principal reutilizable.
+
 @Composable
 private fun Boton(texto: String, accion: () -> Unit) {
     Button(
@@ -126,7 +125,7 @@ private fun Boton(texto: String, accion: () -> Unit) {
     }
 }
 
-// INICIO DE SESIÓN
+
 @Composable
 fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
     var correo by remember { mutableStateOf("") }
@@ -150,7 +149,7 @@ fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
     }
 }
 
-// REGISTRO
+
 @Composable
 fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
     var nombre by remember { mutableStateOf("") }
@@ -178,7 +177,7 @@ fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
     }
 }
 
-// PANTALLA PRINCIPAL
+
 @Composable
 fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
     Column(
@@ -215,7 +214,7 @@ fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
     }
 }
 
-// LÍNEAS DE INVESTIGACIÓN
+
 @Composable
 fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     Pagina("Investigación", "Conoce nuestras áreas de trabajo.") {
@@ -229,7 +228,7 @@ fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     }
 }
 
-// INFORMACIÓN DE CENAMAD
+
 @Composable
 fun CenamadScreen() {
     Pagina("Sobre CENAMAD", "Ciencia para una industria más sostenible.") {

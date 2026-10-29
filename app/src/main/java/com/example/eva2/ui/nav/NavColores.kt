@@ -2,16 +2,6 @@ package com.example.eva2.ui.nav
 
 import androidx.compose.ui.graphics.Color
 
-/*
- * ============================================================================
- * NAVEGACIÓN · NavColores.kt
- * Ubicación: ui/nav/NavColores.kt
- * ----------------------------------------------------------------------------
- * Paleta de la navegación (rojo burdeo + crema, como el mockup de CENAMAD).
- * Está separada del tema (ui/theme) para no modificarlo.
- * Para cambiar el color de TODA la navegación, edita solo este archivo.
- * ============================================================================
- */
 object NavColores {
     val Burdeo = Color(0xFF8A1C2B)        // color principal (activos, botones)
     val BurdeoOscuro = Color(0xFF5E0F1B)  // fondo del degradado

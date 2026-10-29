@@ -1,23 +1,6 @@
 package com.example.eva2.ui.nav
 
-/*
- * ============================================================================
- * NAVEGACIÓN · Rutas.kt
- * Ubicación: ui/nav/Rutas.kt
- * ----------------------------------------------------------------------------
- * Todos los nombres de pantalla de la app en un solo lugar.
- *
- *  ┌ SIN BARRAS ........ LOGIN, REGISTRO
- *  ├ SECCIONES (pestañas de arriba del mockup) .. INICIO ("Portada"),
- *  │                     INVESTIGACION, CENAMAD, NOVEDADES
- *  ├ BARRA INFERIOR .... INICIO, EXPLORAR, GUARDADOS, PERFIL
- *  └ DETALLES .......... LINEA, INVESTIGADOR, PROYECTO, INDICADORES y
- *                        PUBLICACION (se muestra como "Vista previa", a pantalla completa)
- *
- * Para agregar una pantalla: 1) su nombre aquí, 2) su bloque composable en
- * ui/Navegacion.kt (función GrafoNavegacion).
- * ============================================================================
- */
+
 object Rutas {
     // --- Acceso (sin barras) ---
     const val LOGIN = "login"

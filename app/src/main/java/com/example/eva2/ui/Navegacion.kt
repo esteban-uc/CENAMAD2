@@ -198,7 +198,7 @@ private fun GrafoNavegacion(
             )
         }
 
-        composable(Rutas.CENAMAD) { CenamadScreen() }
+        composable(Rutas.CENAMAD) { UbicacionScreen() }
         composable(Rutas.NOVEDADES) { NovedadesScreen() }
 
 

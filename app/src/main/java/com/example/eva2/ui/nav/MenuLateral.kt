@@ -16,18 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/*
- * ============================================================================
- * NAVEGACIÓN · MenuLateral.kt
- * Ubicación: ui/nav/MenuLateral.kt
- * ----------------------------------------------------------------------------
- * Menú que se abre desde la hamburguesa (☰) de la barra superior, o
- * deslizando desde el borde izquierdo.
- *
- *  - Agregar/quitar opciones ... lista "opcionesMenu" (abajo)
- *  - "Cerrar sesión" ........... siempre al final (llama a onCerrarSesion)
- * ============================================================================
- */
 private data class OpcionMenu(val ruta: String, val titulo: String, val icono: ImageVector)
 
 private val opcionesMenu = listOf(

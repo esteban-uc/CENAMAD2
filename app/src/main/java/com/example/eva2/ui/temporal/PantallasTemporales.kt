@@ -111,73 +111,6 @@ private fun Pagina(
     }
 }
 
-// Botón principal reutilizable.
-@Composable
-private fun Boton(texto: String, accion: () -> Unit) {
-    Button(
-        onClick = accion,
-        modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = NavColores.Burdeo
-        ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Text(texto)
-    }
-}
-
-// INICIO DE SESIÓN
-@Composable
-fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
-    var correo by remember { mutableStateOf("") }
-    var clave by remember { mutableStateOf("") }
-
-    Pagina("Bienvenido a CENAMAD", "Conocimiento e innovación en madera.") {
-        OutlinedTextField(
-            correo, { correo = it },
-            label = { Text("Correo electrónico") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            clave, { clave = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Boton("Ingresar", onIngresar)
-        TextButton(onClick = onIrARegistro) {
-            Text("Crear cuenta")
-        }
-    }
-}
-
-// REGISTRO
-@Composable
-fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
-    var nombre by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var clave by remember { mutableStateOf("") }
-
-    Pagina("Crear cuenta", "Completa tus datos.") {
-        OutlinedTextField(
-            nombre, { nombre = it },
-            label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            correo, { correo = it },
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            clave, { clave = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Boton("Registrarme", onRegistrar)
-        TextButton(onClick = onVolver) { Text("Volver") }
-    }
-}
-
 // PANTALLA PRINCIPAL
 @Composable
 fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
@@ -328,15 +261,6 @@ fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) {
         Tarjeta("Diseño sostenible en madera", "Publicación de ejemplo.", {
             onVerPublicacion(1)
         })
-    }
-}
-
-// PERFIL
-@Composable
-fun PerfilScreen(onCerrarSesion: () -> Unit) {
-    Pagina("Mi perfil", "Tu espacio personal.") {
-        Tarjeta("Usuario de prueba", "estudiante@ejemplo.cl")
-        Boton("Cerrar sesión", onCerrarSesion)
     }
 }
 

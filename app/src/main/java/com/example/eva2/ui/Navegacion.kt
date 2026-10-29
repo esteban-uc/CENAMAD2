@@ -15,10 +15,15 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -27,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.eva2.repository.UsuarioRepository
 import com.example.eva2.ui.nav.BarraInferior
 import com.example.eva2.ui.nav.BarraSuperiorDetalle
 import com.example.eva2.ui.nav.BarraSuperiorPrincipal
@@ -36,6 +42,14 @@ import com.example.eva2.ui.nav.Rutas
 import com.example.eva2.ui.nav.RutasPrincipales
 import com.example.eva2.ui.nav.Secciones
 import com.example.eva2.ui.temporal.*
+import com.example.eva2.ui.usuario.CargaSesionScreen
+import com.example.eva2.ui.usuario.DialogoCerrarSesion
+import com.example.eva2.ui.usuario.LoginScreen
+import com.example.eva2.ui.usuario.PerfilUsuarioScreen
+import com.example.eva2.ui.usuario.RegistroScreen
+import com.example.eva2.viewmodel.LoginViewModel
+import com.example.eva2.viewmodel.PerfilViewModel
+import com.example.eva2.viewmodel.RegistroViewModel
 import kotlinx.coroutines.launch
 
 /*
@@ -43,7 +57,7 @@ import kotlinx.coroutines.launch
  * NAVEGACIÓN · Navegacion.kt   (ARCHIVO PRINCIPAL)
  * Ubicación: ui/Navegacion.kt
  * ----------------------------------------------------------------------------
- * MainActivity solo llama a:  Navegacion()
+ * MainActivity solo llama a:  Navegacion(usuarioRepository)
  *
  * MAPA DE ARCHIVOS DE LA NAVEGACIÓN
  *   ui/Navegacion.kt ............. (este) arma todo + mapa de pantallas
@@ -54,6 +68,7 @@ import kotlinx.coroutines.launch
  *   ui/nav/FilaSecciones.kt ...... pestañas Portada·Investigación·CENAMAD·Novedades
  *   ui/nav/BarraInferior.kt ...... Inicio · Explorar · Guardados · Perfil
  *   ui/nav/MenuLateral.kt ........ menú que abre la hamburguesa
+ *   ui/usuario/ .................. login, registro, perfil, carga de sesión y modal de cierre (con Room)
  *   ui/temporal/ ................. pantallas de prueba (se reemplazan)
  *
  * ESTE ARCHIVO TIENE, EN ORDEN:
@@ -66,8 +81,22 @@ import kotlinx.coroutines.launch
 // ============================================================================
 // A) ESQUELETO DE LA APP
 // ============================================================================
+// usuarioRepository: acceso a los usuarios en Room y a la sesión actual (se crea en MainActivity)
 @Composable
-fun Navegacion() {
+fun Navegacion(usuarioRepository: UsuarioRepository) {
+    // Al abrir la app se revisa si quedó una sesión guardada en Room:
+    // si hay, se entra directo a INICIO; si no, se parte en LOGIN.
+    var revisandoSesion by remember { mutableStateOf(true) }
+    var pantallaInicial by remember { mutableStateOf(Rutas.LOGIN) }
+    LaunchedEffect(Unit) {
+        if (usuarioRepository.restaurarSesion() != null) pantallaInicial = Rutas.INICIO
+        revisandoSesion = false
+    }
+    if (revisandoSesion) {
+        CargaSesionScreen()
+        return
+    }
+
     // El "control remoto" de la navegación: se crea una vez y se comparte.
     val navController = rememberNavController()
 
@@ -75,6 +104,9 @@ fun Navegacion() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val contexto = LocalContext.current   // se usa para abrir el menú "Compartir" del celular
+
+    // Modal de confirmación al cerrar sesión (desde el menú lateral o desde Perfil).
+    var mostrarDialogoCierre by remember { mutableStateOf(false) }
 
     // Pantalla actual (se actualiza sola cada vez que se navega).
     val entradaActual by navController.currentBackStackEntryAsState()
@@ -102,7 +134,7 @@ fun Navegacion() {
                 },
                 onCerrarSesion = {
                     scope.launch { drawerState.close() }
-                    navController.cerrarSesion()
+                    mostrarDialogoCierre = true
                 }
             )
         }
@@ -150,9 +182,26 @@ fun Navegacion() {
             // ---- CONTENIDO ----
             GrafoNavegacion(
                 navController = navController,
+                usuarioRepository = usuarioRepository,
+                pantallaInicial = pantallaInicial,
+                onCerrarSesion = { mostrarDialogoCierre = true },
                 modifier = Modifier.padding(padding)
             )
         }
+    }
+
+    // ---- MODAL "¿CERRAR SESIÓN?" (ver ui/usuario/DialogoCerrarSesion.kt) ----
+    if (mostrarDialogoCierre) {
+        DialogoCerrarSesion(
+            onConfirmar = {
+                mostrarDialogoCierre = false
+                scope.launch {
+                    usuarioRepository.cerrarSesion()   // borra la sesión guardada en Room
+                    navController.irAlLogin()          // vuelve al login
+                }
+            },
+            onCancelar = { mostrarDialogoCierre = false }
+        )
     }
 }
 
@@ -171,11 +220,14 @@ private fun NavBackStackEntry.id(): Int = arguments?.getInt(Rutas.ARG_ID) ?: 0
 @Composable
 private fun GrafoNavegacion(
     navController: NavHostController,
+    usuarioRepository: UsuarioRepository,
+    pantallaInicial: String,
+    onCerrarSesion: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = Rutas.LOGIN,   // <- pantalla con la que arranca la app
+        startDestination = pantallaInicial,   // <- LOGIN, o INICIO si había sesión guardada
         modifier = modifier,
 
         // ---- ANIMACIONES ENTRE PANTALLAS ----
@@ -210,20 +262,32 @@ private fun GrafoNavegacion(
         // LOGIN: al ingresar entra a INICIO y borra el login del historial
         // (así el botón "atrás" no vuelve al login).
         composable(Rutas.LOGIN) {
+            val loginViewModel: LoginViewModel =
+                viewModel(factory = LoginViewModel.fabrica(usuarioRepository))
             LoginScreen(
+                viewModel = loginViewModel,
                 onIngresar = {
                     navController.navigate(Rutas.INICIO) {
                         popUpTo(Rutas.LOGIN) { inclusive = true }
                     }
                 },
-                onIrARegistro = { navController.navigate(Rutas.REGISTRO) }
+                onIrARegistro = { navController.navigate(Rutas.REGISTRO) },
+                // VISITANTE: entra sin sesión; en Perfil verá "Hola, visitante"
+                onContinuarComoVisitante = {
+                    navController.navigate(Rutas.INICIO) {
+                        popUpTo(Rutas.LOGIN) { inclusive = true }
+                    }
+                }
             )
         }
 
         // REGISTRO: al registrarse entra directo a INICIO.
         composable(Rutas.REGISTRO) {
+            val registroViewModel: RegistroViewModel =
+                viewModel(factory = RegistroViewModel.fabrica(usuarioRepository))
             RegistroScreen(
-                onRegistrar = {
+                viewModel = registroViewModel,
+                onRegistrado = {
                     navController.navigate(Rutas.INICIO) {
                         popUpTo(Rutas.LOGIN) { inclusive = true }
                     }
@@ -275,9 +339,17 @@ private fun GrafoNavegacion(
             )
         }
 
+        // PERFIL: saluda al usuario (o al visitante) y lleva a sus secciones
         composable(Rutas.PERFIL) {
-            PerfilScreen(
-                onCerrarSesion = { navController.cerrarSesion() }
+            val perfilViewModel: PerfilViewModel =
+                viewModel(factory = PerfilViewModel.fabrica(usuarioRepository))
+            PerfilUsuarioScreen(
+                viewModel = perfilViewModel,
+                onIniciarSesion = { navController.irAlLogin() },
+                onVerGuardados = { navController.irASeccion(Rutas.GUARDADOS) },
+                onVerIndicadores = { navController.navigate(Rutas.INDICADORES) },
+                onAcercaDe = { navController.irASeccion(Rutas.CENAMAD) },
+                onCerrarSesion = onCerrarSesion   // abre el modal de confirmación
             )
         }
 
@@ -352,8 +424,8 @@ private fun NavHostController.irASeccion(ruta: String) {
     }
 }
 
-/** Cierra sesión: borra todo el historial y vuelve al login. */
-private fun NavHostController.cerrarSesion() {
+/** Borra todo el historial y abre el login (al cerrar sesión o al entrar desde visitante). */
+private fun NavHostController.irAlLogin() {
     navigate(Rutas.LOGIN) {
         popUpTo(Rutas.INICIO) { inclusive = true }
     }

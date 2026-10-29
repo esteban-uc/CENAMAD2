@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eva2.ui.nav.NavColores
 
+// Datos ficticios para mostrar contenido en la aplicación.
 private val lineas = listOf(
     "Construcción en madera",
     "Bioproductos y biomateriales",
@@ -39,7 +40,7 @@ private val publicaciones = listOf(
     "Gestión responsable del bosque"
 )
 
-// Título
+// Título reutilizable para mantener el mismo estilo.
 @Composable
 private fun Titulo(texto: String, descripcion: String = "") {
     Text(
@@ -53,7 +54,7 @@ private fun Titulo(texto: String, descripcion: String = "") {
     }
 }
 
-
+// Tarjeta blanca con bordes redondeados.
 @Composable
 private fun Tarjeta(
     titulo: String,
@@ -90,7 +91,7 @@ private fun Tarjeta(
     }
 }
 
-
+// Fondo y distribución compartidos por las pantallas.
 @Composable
 private fun Pagina(
     titulo: String,
@@ -110,74 +111,7 @@ private fun Pagina(
     }
 }
 
-
-@Composable
-private fun Boton(texto: String, accion: () -> Unit) {
-    Button(
-        onClick = accion,
-        modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = NavColores.Burdeo
-        ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Text(texto)
-    }
-}
-
-
-@Composable
-fun LoginScreen(onIngresar: () -> Unit, onIrARegistro: () -> Unit) {
-    var correo by remember { mutableStateOf("") }
-    var clave by remember { mutableStateOf("") }
-
-    Pagina("Bienvenido a CENAMAD", "Conocimiento e innovación en madera.") {
-        OutlinedTextField(
-            correo, { correo = it },
-            label = { Text("Correo electrónico") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            clave, { clave = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Boton("Ingresar", onIngresar)
-        TextButton(onClick = onIrARegistro) {
-            Text("Crear cuenta")
-        }
-    }
-}
-
-
-@Composable
-fun RegistroScreen(onRegistrar: () -> Unit, onVolver: () -> Unit) {
-    var nombre by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var clave by remember { mutableStateOf("") }
-
-    Pagina("Crear cuenta", "Completa tus datos.") {
-        OutlinedTextField(
-            nombre, { nombre = it },
-            label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            correo, { correo = it },
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            clave, { clave = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Boton("Registrarme", onRegistrar)
-        TextButton(onClick = onVolver) { Text("Volver") }
-    }
-}
-
-
+// PANTALLA PRINCIPAL
 @Composable
 fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
     Column(
@@ -214,7 +148,7 @@ fun InicioScreen(onExplorar: () -> Unit, onVerIndicadores: () -> Unit) {
     }
 }
 
-
+// LÍNEAS DE INVESTIGACIÓN
 @Composable
 fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     Pagina("Investigación", "Conoce nuestras áreas de trabajo.") {
@@ -228,7 +162,7 @@ fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     }
 }
 
-
+// INFORMACIÓN DE CENAMAD
 @Composable
 fun CenamadScreen() {
     Pagina("Sobre CENAMAD", "Ciencia para una industria más sostenible.") {
@@ -327,15 +261,6 @@ fun GuardadosScreen(onVerPublicacion: (Int) -> Unit) {
         Tarjeta("Diseño sostenible en madera", "Publicación de ejemplo.", {
             onVerPublicacion(1)
         })
-    }
-}
-
-// PERFIL
-@Composable
-fun PerfilScreen(onCerrarSesion: () -> Unit) {
-    Pagina("Mi perfil", "Tu espacio personal.") {
-        Tarjeta("Usuario de prueba", "estudiante@ejemplo.cl")
-        Boton("Cerrar sesión", onCerrarSesion)
     }
 }
 

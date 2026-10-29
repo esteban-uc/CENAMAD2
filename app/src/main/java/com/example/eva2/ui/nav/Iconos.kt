@@ -54,7 +54,7 @@ object Iconos {
     }
     val Advertencia: ImageVector by lazy { crear("Advertencia", "M1,21h22L12,2 1,21zM13,18h-2v-2h2v2zM13,14h-2v-4h2v4z") }
 
-    // --- Íconos del perfil y de los botones de acceso ---
+    // Iconos
     val Flecha: ImageVector by lazy { crear("Flecha", "M12,4l-1.41,1.41L16.17,11H4v2h12.17l-5.58,5.59L12,20l8,-8z") }
     val Chevron: ImageVector by lazy { crear("Chevron", "M10,6L8.59,7.41 13.17,12l-4.58,4.59L10,18l6,-6z") }
     val Info: ImageVector by lazy {
@@ -63,8 +63,6 @@ object Iconos {
             "M11,7h2v2h-2zM11,11h2v6h-2zM12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8s3.59,-8 8,-8 8,3.59 8,8 -3.59,8 -8,8z"
         )
     }
-
-    // Convierte un trazo SVG en un ícono de Compose.
     private fun crear(nombre: String, trazo: String): ImageVector =
         ImageVector.Builder(
             name = nombre,

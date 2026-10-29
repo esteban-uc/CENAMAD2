@@ -10,7 +10,6 @@ class UbicacionRepository(context: Context) {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-
     fun obtenerCenamad(): Ubicacion = Ubicacion(
         nombre = "CENAMAD",
         direccion = "Av. Vicuña Mackenna 4860",
@@ -34,8 +33,6 @@ class UbicacionRepository(context: Context) {
             descripcion = "Línea 5, estación más cercana al campus"
         )
     )
-
-
     @SuppressLint("MissingPermission")
     fun obtenerMiUbicacion(onResultado: (Ubicacion?) -> Unit) {
         fusedLocationClient.lastLocation

@@ -10,7 +10,6 @@ data class Ubicacion(
     val referencia: String = "",
     val descripcion: String = ""
 ) {
-
     val direccionCompleta: String
         get() = "$direccion, $comuna, $ciudad"
 }

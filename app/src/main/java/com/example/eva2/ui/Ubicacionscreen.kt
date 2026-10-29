@@ -47,7 +47,6 @@ fun UbicacionScreen(
     val cenamad = uiState.cenamad
     val posicionCenamad = LatLng(cenamad.latitud, cenamad.longitud)
 
-
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(posicionCenamad, 16f)
     }

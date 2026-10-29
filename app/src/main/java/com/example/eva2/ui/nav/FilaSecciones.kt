@@ -29,7 +29,6 @@ val Secciones = listOf(
     Seccion(Rutas.CENAMAD, "CENAMAD"),
     Seccion(Rutas.NOVEDADES, "Novedades")
 )
-
 @Composable
 fun FilaSecciones(
     rutaActual: String?,

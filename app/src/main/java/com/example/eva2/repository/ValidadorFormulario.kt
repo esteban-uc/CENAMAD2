@@ -15,7 +15,6 @@ object ValidadorFormulario {
             else -> null
         }
     }
-
     private val dominiosPermitidos = listOf("gmail.com")
 
     fun validarCorreo(correo: String): String? {
@@ -27,10 +26,8 @@ object ValidadorFormulario {
             else -> null
         }
     }
-
     fun validarContrasenaLogin(contrasena: String): String? =
         if (contrasena.isBlank()) "Ingresa tu contraseña" else null
-
     fun validarContrasenaRegistro(contrasena: String): String? = when {
         contrasena.isBlank() -> "Ingresa una contraseña"
         contrasena.length < 8 -> "Debe tener al menos 8 caracteres"
@@ -38,7 +35,6 @@ object ValidadorFormulario {
         contrasena.none { it.isDigit() } -> "Debe tener al menos un número"
         else -> null
     }
-
     fun validarConfirmacion(contrasena: String, confirmacion: String): String? = when {
         confirmacion.isBlank() -> "Repite tu contraseña"
         confirmacion != contrasena -> "Las contraseñas no coinciden"

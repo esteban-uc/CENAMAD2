@@ -317,8 +317,6 @@ private fun GrafoNavegacion(
         composable(Rutas.CENAMAD) { UbicacionScreen() }
         composable(Rutas.NOVEDADES) { NovedadesScreen() }
 
-        composable(Rutas.NOVEDADES) { NovedadesScreen() }
-
         // ---------------------------------------------------------------
         // 3) OTRAS PANTALLAS DE LA BARRA INFERIOR
         // ---------------------------------------------------------------

@@ -215,7 +215,7 @@ private fun abrirEnGoogleMaps(context: Context, lugar: Ubicacion) {
     val enlaceMaps = Uri.parse("https://www.google.com/maps/search/?api=1&query=$textoBusqueda")
     try {
         context.startActivity(Intent(Intent.ACTION_VIEW, enlaceMaps))
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         Toast.makeText(context, "No hay una app para abrir mapas", Toast.LENGTH_SHORT).show()
     }
 }

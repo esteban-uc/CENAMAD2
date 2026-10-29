@@ -162,16 +162,6 @@ fun InvestigacionScreen(onVerLinea: (Int) -> Unit) {
     }
 }
 
-// INFORMACIÓN DE CENAMAD
-@Composable
-fun CenamadScreen() {
-    Pagina("Sobre CENAMAD", "Ciencia para una industria más sostenible.") {
-        Tarjeta("Nuestra misión", "Impulsar la investigación y la innovación.")
-        Tarjeta("Nuestro trabajo", "Desarrollo tecnológico y formación de capital humano.")
-        Tarjeta("Colaboración", "Conectar investigadores, proyectos y publicaciones.")
-    }
-}
-
 // NOVEDADES
 @Composable
 fun NovedadesScreen() {

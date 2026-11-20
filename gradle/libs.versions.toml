@@ -18,6 +18,9 @@ activityCompose = "1.13.0"
 kotlin = "2.2.10"
 composeBom = "2026.02.01"
 navigationCompose = "2.9.8"
+retrofit = "2.11.0"
+converterGson = "2.11.0"
+
 
 
 [libraries]
@@ -46,6 +49,9 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 play-services-location-v2130 = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 play-services-maps-v1900 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

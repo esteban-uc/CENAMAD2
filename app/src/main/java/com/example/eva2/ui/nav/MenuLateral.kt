@@ -33,7 +33,6 @@ fun ContenidoMenuLateral(
     onNavegar: (String) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
-    // Colores de cada opción del menú
     val colores = NavigationDrawerItemDefaults.colors(
         selectedContainerColor = NavColores.RosaClaro,
         selectedTextColor = NavColores.Burdeo,
@@ -45,7 +44,7 @@ fun ContenidoMenuLateral(
 
     ModalDrawerSheet(drawerContainerColor = NavColores.Crema) {
 
-        // Encabezado con el logo
+        // Encabezado
         Column(modifier = Modifier.padding(20.dp)) {
             LogoCenamad()
             Spacer(modifier = Modifier.height(8.dp))
@@ -57,8 +56,7 @@ fun ContenidoMenuLateral(
         }
         Divisor()
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Opciones de navegación
+        // Opciones nevagacion
         opcionesMenu.forEach { opcion ->
             NavigationDrawerItem(
                 label = { Text(opcion.titulo) },
@@ -69,11 +67,10 @@ fun ContenidoMenuLateral(
                 colors = colores
             )
         }
-
         Spacer(modifier = Modifier.weight(1f))
         Divisor()
 
-        // Cerrar sesión (al final)
+        // Cerrar sesión
         NavigationDrawerItem(
             label = { Text("Cerrar sesión") },
             icon = { Icon(Iconos.CerrarSesion, contentDescription = "Cerrar sesión") },

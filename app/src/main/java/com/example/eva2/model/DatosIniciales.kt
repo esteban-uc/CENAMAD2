@@ -10,12 +10,10 @@ object DatosIniciales : RoomDatabase.Callback() {
         super.onCreate(db)
         insertarUsuarioDemo(db)
     }
-
     override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
         super.onDestructiveMigration(db)
         insertarUsuarioDemo(db)
     }
-
     private fun insertarUsuarioDemo(db: SupportSQLiteDatabase) {
         db.execSQL(
             """

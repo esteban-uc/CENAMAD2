@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-
 //LOGO
 @Composable
 fun LogoCenamad() {
@@ -68,7 +67,7 @@ fun BarraSuperiorPrincipal(
         modifier = Modifier
             .fillMaxWidth()
             .background(NavColores.Crema)
-            .statusBarsPadding()      // deja espacio para la barra de estado del celular
+            .statusBarsPadding()
     ) {
         Row(
             modifier = Modifier
@@ -95,7 +94,7 @@ fun BarraSuperiorPrincipal(
     }
 }
 
-// ---------- 3) BARRA DE DETALLE ----------
+// Barra de detalle
 @Composable
 fun BarraSuperiorDetalle(
     titulo: String,
@@ -132,15 +131,6 @@ fun BarraSuperiorDetalle(
         Divisor()
     }
 }
-
-// ---------- 4) BARRA DE VISTA PREVIA ----------
-/**
- * Barra de la pantalla "Vista previa" (a pantalla completa, sin barra inferior).
- * @param subtitulo texto pequeño bajo el título (ej. "18 páginas · PDF").
- *                  Es un dato de la publicación, así que lo entrega la pantalla real.
- * @param onCerrar     toca la "X"
- * @param onCompartir  toca el botón compartir
- */
 @Composable
 fun BarraSuperiorVistaPrevia(
     titulo: String,
@@ -197,8 +187,6 @@ fun BarraSuperiorVistaPrevia(
         Divisor()
     }
 }
-
-// Línea fina que separa la barra del contenido
 @Composable
 fun Divisor() {
     Box(

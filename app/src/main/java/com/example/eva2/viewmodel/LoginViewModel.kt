@@ -17,11 +17,9 @@ class LoginViewModel(private val usuarioRepository: UsuarioRepository) : ViewMod
 
     private val _estado = MutableStateFlow(LoginEstado())
     val estado: StateFlow<LoginEstado> = _estado.asStateFlow()
-
     fun alCambiarCorreo(nuevoCorreo: String) {
         _estado.update { it.copy(correo = nuevoCorreo, errorCorreo = null, errorGeneral = null) }
     }
-
     fun alCambiarContrasena(nuevaContrasena: String) {
         _estado.update { it.copy(contrasena = nuevaContrasena, errorContrasena = null, errorGeneral = null) }
     }
@@ -62,7 +60,6 @@ class LoginViewModel(private val usuarioRepository: UsuarioRepository) : ViewMod
             }
         }
     }
-
     companion object {
         fun fabrica(usuarioRepository: UsuarioRepository) = viewModelFactory {
             initializer { LoginViewModel(usuarioRepository) }

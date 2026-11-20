@@ -10,6 +10,6 @@ data class RegistroEstado(
     val errorCorreo: String? = null,
     val errorContrasena: String? = null,
     val errorConfirmacion: String? = null,
-    val cargando: Boolean = false,        // es true mientras se guarda en la base de datos
-    val registroExitoso: Boolean = false  // es true cuando la cuenta quedó guardada
+    val cargando: Boolean = false,
+    val registroExitoso: Boolean = false
 )

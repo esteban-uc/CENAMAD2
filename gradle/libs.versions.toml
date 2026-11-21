@@ -1,5 +1,6 @@
 [versions]
 lifecycleViewmodelCompose = "2.11.0"
+loggingInterceptor = "5.5.1"
 mapsCompose = "9.0.1"
 mapsComposeVersion = "6.4.1"
 playServicesLocation = "21.4.0"
@@ -19,7 +20,7 @@ kotlin = "2.2.10"
 composeBom = "2026.02.01"
 navigationCompose = "2.9.8"
 retrofit = "2.11.0"
-converterGson = "2.11.0"
+converterGson = "3.0.0"
 
 
 
@@ -43,6 +44,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 maps-compose-v641 = { module = "com.google.maps.android:maps-compose", version.ref = "mapsComposeVersion" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }

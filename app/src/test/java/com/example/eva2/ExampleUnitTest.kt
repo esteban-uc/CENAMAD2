@@ -1,17 +1,47 @@
 package com.example.eva2
 
+import com.example.eva2.repository.ValidadorFormulario
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
-import org.junit.Assert.*
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun validarNombreYCorreo() {
+        assertNull(ValidadorFormulario.validarNombre("Esteban Perez"))
+        assertEquals(
+            "Ingresa tu nombre",
+            ValidadorFormulario.validarNombre("")
+        )
+        assertNull(ValidadorFormulario.validarCorreo("estudiante@gmail.com"))
+        assertEquals(
+            "El correo no tiene un formato válido",
+            ValidadorFormulario.validarCorreo("estudiantegmail.com")
+        )
+    }
+
+    @Test
+    fun validarContrasenas() {
+        assertNull(ValidadorFormulario.validarContrasenaRegistro("Clave1234"))
+        assertEquals(
+            "Debe tener al menos 8 caracteres",
+            ValidadorFormulario.validarContrasenaRegistro("Ab123")
+        )
+        assertEquals(
+            "Debe tener al menos una mayúscula",
+            ValidadorFormulario.validarContrasenaRegistro("clave1234")
+        )
+        assertEquals(
+            "Debe tener al menos un número",
+            ValidadorFormulario.validarContrasenaRegistro("ClaveSegura")
+        )
+        assertNull(
+            ValidadorFormulario.validarConfirmacion("Clave1234", "Clave1234")
+        )
+        assertEquals(
+            "Las contraseñas no coinciden",
+            ValidadorFormulario.validarConfirmacion("Clave1234", "Clave5678")
+        )
     }
 }

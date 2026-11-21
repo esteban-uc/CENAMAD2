@@ -3,12 +3,14 @@ package com.example.eva2.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import com.example.eva2.model.Ubicacion
+import com.example.eva2.model.UbicacionDto
+import com.example.eva2.network.RetrofitClient
 import com.google.android.gms.location.LocationServices
-
 
 class UbicacionRepository(context: Context) {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    private val api = RetrofitClient.ubicacionesApi
 
     fun obtenerCenamad(): Ubicacion = Ubicacion(
         nombre = "CENAMAD",
@@ -21,7 +23,6 @@ class UbicacionRepository(context: Context) {
         descripcion = "Centro Nacional para la Industria de la Madera, liderado por CIM UC"
     )
 
-
     fun obtenerLugaresCercanos(): List<Ubicacion> = listOf(
         Ubicacion(
             nombre = "Metro San Joaquín",
@@ -33,6 +34,7 @@ class UbicacionRepository(context: Context) {
             descripcion = "Línea 5, estación más cercana al campus"
         )
     )
+
     @SuppressLint("MissingPermission")
     fun obtenerMiUbicacion(onResultado: (Ubicacion?) -> Unit) {
         fusedLocationClient.lastLocation
@@ -55,5 +57,82 @@ class UbicacionRepository(context: Context) {
             .addOnFailureListener {
                 onResultado(null)
             }
+    }
+
+    suspend fun obtenerUbicacionesRemotas(): Result<List<UbicacionDto>> {
+        return try {
+            val response = api.obtenerUbicaciones()
+            if (response.isSuccessful) {
+                Result.success(response.body() ?: emptyList())
+            } else {
+                Result.failure(Exception("Error HTTP ${response.code()}: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun crearUbicacionRemota(ubicacion: UbicacionDto): Result<UbicacionDto> {
+        return try {
+            val response = api.crearUbicacion(ubicacion)
+            val creada = response.body()
+            if (response.isSuccessful && creada != null) {
+                Result.success(creada)
+            } else {
+                Result.failure(
+                    Exception("Error HTTP ${response.code()}: respuesta vacía o inválida de Xano")
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun actualizarParcialUbicacionRemota(id: Int, ubicacion: UbicacionDto): Result<UbicacionDto> {
+        return try {
+            val response = api.actualizarParcialUbicacion(id, ubicacion)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Error HTTP ${response.code()}: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun reemplazarUbicacionRemota(id: Int, ubicacion: UbicacionDto): Result<UbicacionDto> {
+        return try {
+            val response = api.reemplazarUbicacion(id, ubicacion)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Error HTTP ${response.code()}: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun verificarUbicacionRemota(id: Int): Result<Boolean> {
+        return try {
+            val response = api.verificarUbicacion(id)
+            Result.success(response.isSuccessful)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun eliminarUbicacionRemota(id: Int): Result<Unit> {
+        return try {
+            val response = api.eliminarUbicacion(id)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Error HTTP ${response.code()}: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

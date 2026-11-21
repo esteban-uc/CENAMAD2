@@ -1,5 +1,5 @@
-package com.example.eva2.ui
 
+package com.example.eva2.ui
 
 import android.Manifest
 import android.content.ActivityNotFoundException
@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 
-
 @Composable
 fun UbicacionScreen(
     viewModel: UbicacionViewModel = viewModel()
@@ -51,24 +50,40 @@ fun UbicacionScreen(
         position = CameraPosition.fromLatLngZoom(posicionCenamad, 16f)
     }
 
+    var nombreManual by remember { mutableStateOf("") }
+    var latitudManual by remember { mutableStateOf("") }
+    var longitudManual by remember { mutableStateOf("") }
 
     val permisoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permisos ->
-        val permisoConcedido = permisos[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permisos[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        val permisoConcedido =
+            permisos[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permisos[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
-        if (permisoConcedido) viewModel.buscarMiUbicacion() else viewModel.permisoDenegado()
+        if (permisoConcedido) {
+            viewModel.buscarMiUbicacion()
+        } else {
+            viewModel.permisoDenegado()
+        }
     }
-
 
     LaunchedEffect(uiState.miUbicacion) {
         val ubicacionUsuario = uiState.miUbicacion ?: return@LaunchedEffect
+
         val limitesDelMapa = LatLngBounds.builder()
             .include(posicionCenamad)
-            .include(LatLng(ubicacionUsuario.latitud, ubicacionUsuario.longitud))
+            .include(
+                LatLng(
+                    ubicacionUsuario.latitud,
+                    ubicacionUsuario.longitud
+                )
+            )
             .build()
-        cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(limitesDelMapa, 120))
+
+        cameraPositionState.move(
+            CameraUpdateFactory.newLatLngBounds(limitesDelMapa, 120)
+        )
     }
 
     Column(
@@ -78,8 +93,9 @@ fun UbicacionScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_cenamad),
                 contentDescription = "Logo de CENAMAD",
@@ -90,26 +106,31 @@ fun UbicacionScreen(
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White)
             )
+
             Text(
                 text = "ENCUÉNTRANOS",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
+
             Text(
                 text = "Nuestra ubicación",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+
             Text(
                 text = cenamad.descripcion,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
             Text(
                 text = cenamad.direccionCompleta,
                 style = MaterialTheme.typography.bodyLarge
             )
+
             Text(
                 text = cenamad.referencia,
                 style = MaterialTheme.typography.bodyMedium,
@@ -127,38 +148,52 @@ fun UbicacionScreen(
                     .height(300.dp),
                 cameraPositionState = cameraPositionState
             ) {
-
                 val estadoMarcadorCenamad = remember(posicionCenamad) {
                     MarkerState(position = posicionCenamad)
                 }
+
                 Marker(
                     state = estadoMarcadorCenamad,
                     title = cenamad.nombre,
                     snippet = cenamad.direccion
                 )
 
-
                 uiState.lugaresCercanos.forEach { lugarCercano ->
                     val estadoMarcadorLugar = remember(lugarCercano) {
-                        MarkerState(position = LatLng(lugarCercano.latitud, lugarCercano.longitud))
+                        MarkerState(
+                            position = LatLng(
+                                lugarCercano.latitud,
+                                lugarCercano.longitud
+                            )
+                        )
                     }
+
                     Marker(
                         state = estadoMarcadorLugar,
                         title = lugarCercano.nombre,
                         snippet = lugarCercano.descripcion,
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                        icon = BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_AZURE
+                        )
                     )
                 }
 
-
                 uiState.miUbicacion?.let { ubicacionUsuario ->
                     val estadoMarcadorUsuario = remember(ubicacionUsuario) {
-                        MarkerState(position = LatLng(ubicacionUsuario.latitud, ubicacionUsuario.longitud))
+                        MarkerState(
+                            position = LatLng(
+                                ubicacionUsuario.latitud,
+                                ubicacionUsuario.longitud
+                            )
+                        )
                     }
+
                     Marker(
                         state = estadoMarcadorUsuario,
                         title = ubicacionUsuario.nombre,
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                        icon = BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_GREEN
+                        )
                     )
                 }
             }
@@ -181,7 +216,9 @@ fun UbicacionScreen(
         }
 
         Button(
-            onClick = { abrirEnGoogleMaps(context, cenamad) },
+            onClick = {
+                abrirEnGoogleMaps(context, cenamad)
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Abrir en Google Maps")
@@ -199,22 +236,132 @@ fun UbicacionScreen(
             enabled = !uiState.cargandoMiUbicacion,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (uiState.cargandoMiUbicacion) "Buscando tu ubicación..." else "¿A qué distancia estoy?")
+            Text(
+                if (uiState.cargandoMiUbicacion) {
+                    "Buscando tu ubicación..."
+                } else {
+                    "¿A qué distancia estoy?"
+                }
+            )
+        }
+
+        OutlinedTextField(
+            value = nombreManual,
+            onValueChange = { nombreManual = it },
+            label = { Text("Nombre de ubicación") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = latitudManual,
+            onValueChange = { latitudManual = it },
+            label = { Text("Latitud (ej. -33.4986)") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = longitudManual,
+            onValueChange = { longitudManual = it },
+            label = { Text("Longitud (ej. -70.6120)") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = {
+                val lat = latitudManual.trim()
+                    .replace(",", ".")
+                    .toDoubleOrNull()
+
+                val lon = longitudManual.trim()
+                    .replace(",", ".")
+                    .toDoubleOrNull()
+
+                if (lat != null && lon != null) {
+                    val manual = cenamad.copy(
+                        nombre = nombreManual.trim()
+                            .ifBlank { "Ubicación manual" },
+                        latitud = lat,
+                        longitud = lon,
+                        descripcion = "Creada manualmente desde la app"
+                    )
+
+                    viewModel.guardarUbicacionEnXano(manual)
+                }
+            },
+            enabled = !uiState.cargandoRemotas,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Guardar ubicación en Xano")
+        }
+
+        if (uiState.ubicacionesRemotas.isNotEmpty()) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Ubicaciones en Xano (${uiState.ubicacionesRemotas.size}):",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                uiState.ubicacionesRemotas.forEach { item ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = item.nombre.ifBlank {
+                                    "Ubicación guardada"
+                                },
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Text(
+                                text = "Lat: ${item.latitud}, Lon: ${item.longitud}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         uiState.mensajeError?.let { mensajeError ->
-            Text(text = mensajeError, color = MaterialTheme.colorScheme.error)
+            Text(
+                text = mensajeError,
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }
 
-
 private fun abrirEnGoogleMaps(context: Context, lugar: Ubicacion) {
     val textoBusqueda = Uri.encode(lugar.direccionCompleta)
-    val enlaceMaps = Uri.parse("https://www.google.com/maps/search/?api=1&query=$textoBusqueda")
+
+    val enlaceMaps = Uri.parse(
+        "https://www.google.com/maps/search/?api=1&query=$textoBusqueda"
+    )
+
     try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, enlaceMaps))
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, enlaceMaps)
+        )
     } catch (_: ActivityNotFoundException) {
-        Toast.makeText(context, "No hay una app para abrir mapas", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            "No hay una app para abrir mapas",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

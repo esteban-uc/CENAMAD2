@@ -59,6 +59,23 @@ class RegistroViewModel(private val usuarioRepository: UsuarioRepository) : View
         _estado.update { it.copy(cargando = true) }
 
         viewModelScope.launch {
+            val resultadoRemoto = usuarioRepository.crearUsuarioRemoto(
+                nombre = estadoActual.nombre,
+                correo = estadoActual.correo,
+                contrasenaPlano = estadoActual.contrasena
+            )
+
+            if (resultadoRemoto.isFailure) {
+                _estado.update {
+                    it.copy(
+                        cargando = false,
+                        errorCorreo = resultadoRemoto.exceptionOrNull()?.message
+                            ?: "No se pudo registrar en el servidor"
+                    )
+                }
+                return@launch
+            }
+
             val usuario = usuarioRepository.registrar(
                 estadoActual.nombre,
                 estadoActual.correo,

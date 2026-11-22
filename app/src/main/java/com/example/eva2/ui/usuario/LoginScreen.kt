@@ -1,5 +1,9 @@
 package com.example.eva2.ui.usuario
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -34,12 +38,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.eva2.repository.NotificacionHelper
 import com.example.eva2.ui.nav.Iconos
 import com.example.eva2.ui.nav.NavColores
 import com.example.eva2.viewmodel.LoginViewModel
@@ -53,19 +59,27 @@ fun LoginScreen(
 ) {
     val estado by viewModel.estado.collectAsState()
 
-    LaunchedEffect(estado.ingresoExitoso) {
-        if (estado.ingresoExitoso) onIngresar()
+    val contexto = LocalContext.current
+    val permisoNotificacionesLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permisoNotificacionesLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     val desplazamientoSacudida = remember { Animatable(0f) }
 
-    LaunchedEffect(estado.intentosFallidos) {
-        if (estado.intentosFallidos > 0) {
-            repeat(3) {
-                desplazamientoSacudida.animateTo(12f, tween(durationMillis = 50))
-                desplazamientoSacudida.animateTo(-12f, tween(durationMillis = 50))
-            }
-            desplazamientoSacudida.animateTo(0f, tween(durationMillis = 50))
+    LaunchedEffect(estado.ingresoExitoso) {
+        if (estado.ingresoExitoso) {
+            NotificacionHelper.mostrarNotificacion(
+                contexto = contexto,
+                titulo = "Sesión iniciada en CENAMAD",
+                mensaje = "Bienvenido nuevamente a la mejor biblioteca de madera."
+            )
+            onIngresar()
         }
     }
 

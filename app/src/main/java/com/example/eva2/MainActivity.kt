@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.room.Room
 import com.example.eva2.model.AppDatabase
 import com.example.eva2.model.DatosIniciales
+import com.example.eva2.repository.NotificacionHelper
 import com.example.eva2.repository.UsuarioRepository
 import com.example.eva2.ui.Navegacion
 import com.example.eva2.ui.theme.Eva2Theme
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NotificacionHelper.crearCanal(this)
         enableEdgeToEdge()
         setContent {
             Eva2Theme {

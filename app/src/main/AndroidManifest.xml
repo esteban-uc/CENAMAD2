@@ -26,7 +26,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="Eva 2"
+            android:label="CENAMAD"
             android:theme="@style/Theme.Eva2"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

@@ -60,7 +60,7 @@ object NotificacionHelper {
         )
 
         val notificacion = NotificationCompat.Builder(contexto, CANAL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_stat_cenamad)
             .setContentTitle(titulo)
             .setContentText(mensaje)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
